@@ -11,7 +11,8 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
-
+with open('data.csv', mode ='r')as file:
+  data = [line.split() for line in file]
 
 def pregunta_01():
     """
@@ -21,7 +22,7 @@ def pregunta_01():
     214
 
     """
-    return
+    return sum([int(x[1]) for x in data])
 
 
 def pregunta_02():
@@ -39,8 +40,8 @@ def pregunta_02():
     ]
 
     """
-    return
 
+    return sorted([(y, [x[0] for x in data].count(y)) for y in set([x[0] for x in data])])
 
 def pregunta_03():
     """
@@ -57,7 +58,14 @@ def pregunta_03():
     ]
 
     """
-    return
+    registry = [(x[0], int(x[1])) for x in data]
+    reg_dict = {x:0 for (x,_) in registry}
+    for x in registry:
+        reg_dict[x[0]] = reg_dict[x[0]] + x[1]
+    registry = sorted(reg_dict.items())
+    
+
+    return registry
 
 
 def pregunta_04():
@@ -82,8 +90,8 @@ def pregunta_04():
     ]
 
     """
-    return
 
+    return sorted([(y, [x[2].split("-")[1] for x in data].count(y)) for y in set([x[2].split("-")[1] for x in data])])
 
 def pregunta_05():
     """
@@ -98,9 +106,18 @@ def pregunta_05():
         ("D", 8, 3),
         ("E", 9, 1),
     ]
+    
 
     """
-    return
+
+    local = [(x[0], int(x[1])) for x in data]
+    local_dict = {x[0]:[] for x in local}
+    for i in local:
+        local_dict[i[0]].append(i[1])
+    local = list(local_dict.items())
+    local = sorted([(x[0], max(x[1]), min(x[1])) for x in local])
+
+    return local
 
 
 def pregunta_06():
@@ -123,10 +140,23 @@ def pregunta_06():
         ("iii", 0, 9),
         ("jjj", 5, 17),
     ]
-
+    
     """
-    return
 
+    local = [x[4].split(",") for x in data]
+    local_dict = {}
+    for x in local:
+        for y in x:
+            key = y[:3]
+            value = int(y[4:])
+            if key not in local_dict:
+                local_dict[key] = [value]
+            else:
+                local_dict[key].append(value)
+    local = list(local_dict.items())
+    local = sorted([(x[0], min(x[1]), max(x[1])) for x in local])
+
+    return local
 
 def pregunta_07():
     """
@@ -147,9 +177,14 @@ def pregunta_07():
         (8, ["E", "D", "E", "A", "B"]),
         (9, ["A", "B", "E", "A", "A", "C"]),
     ]
-
+    
     """
-    return
+    local = [(x[0], int(x[1])) for x in data]
+    local_dict = {x[1]:[] for x in local}
+    for i in local:
+        local_dict[i[1]].append(i[0])
+
+    return sorted(list(local_dict.items()))
 
 
 def pregunta_08():
@@ -174,7 +209,14 @@ def pregunta_08():
     ]
 
     """
-    return
+
+    local = [(x[0], int(x[1])) for x in data]
+    local_dict = {x[1]:[] for x in local}
+    for i in local:
+        local_dict[i[1]].append(i[0])
+    local = sorted(list(local_dict.items()))
+    local = [(x[0], sorted(list(set(x[1])))) for x in local]
+    return local
 
 
 def pregunta_09():
@@ -197,7 +239,20 @@ def pregunta_09():
     }
 
     """
-    return
+
+    local = [x[4].split(",") for x in data]
+    local_dict = {}
+    for x in local:
+        for y in x:
+            key = y[:3]
+            value = int(y[4:])
+            if key not in local_dict:
+                local_dict[key] = [value]
+            else:
+                local_dict[key].append(value)
+    local = list(local_dict.items())
+    local = {x[0]:len(x[1]) for x in local}
+    return local
 
 
 def pregunta_10():
@@ -215,11 +270,11 @@ def pregunta_10():
         ("E", 2, 3),
         ("E", 3, 3),
     ]
-
+    
 
     """
-    return
-
+    local = [(x[0], len(x[3].split(",")), len(x[4].split(","))) for x in data]
+    return local
 
 def pregunta_11():
     """
@@ -239,8 +294,15 @@ def pregunta_11():
 
 
     """
-    return
-
+    local = [(int(x[1]), x[3].split(",")) for x in data]
+    local_dir = {}
+    for i in local:
+        for y in i[1]:
+            if y not in local_dir:
+                local_dir[y] = i[0]
+            else:
+                local_dir[y] = local_dir[y] + i[0]
+    return local_dir
 
 def pregunta_12():
     """
@@ -257,4 +319,9 @@ def pregunta_12():
     }
 
     """
-    return
+    local = [(x[0], sum([int(y[4:]) for y in x[4].split(",")])) for x in data]
+    local_dir = {x[0]:0 for x in set([y[0] for y in local])}
+    for i in local:
+        local_dir[i[0]] = local_dir[i[0]] + i[1]
+    return local_dir
+
